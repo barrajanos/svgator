@@ -133,37 +133,81 @@ const AIAnimation = () => {
       }
     }
 
-    // Intelligens ikon kiválasztó
+    // Debug és egyszerűsített ikon kiválasztó
     const selectIcon = (text: string) => {
-      // Objektum kulcsszavak prioritási sorrendben
-      const keywords = [
-        'telefon', 'szív', 'ház', 'keresés', 'menü', 'plus', 
-        'nyíl', 'nap', 'lakat', 'gomb', 'laptop', 'autó', 'kérdőjel'
-      ]
+      console.log('🔍 Keresett szöveg:', text)
       
-      for (const keyword of keywords) {
-        if (text.includes(keyword) && professionalIcons[keyword]) {
-          return professionalIcons[keyword]
-        }
+      // Explicit if-else logika minden ikonhoz
+      if (text.includes('telefon') || text.includes('phone') || text.includes('call')) {
+        console.log('✅ Telefon ikon kiválasztva')
+        return professionalIcons['telefon']
       }
       
-      // Egyéb kulcsszavak alternatívákkal
-      if (text.includes('home') || text.includes('otthon')) return professionalIcons.ház
-      if (text.includes('heart') || text.includes('love') || text.includes('szerelem')) return professionalIcons.szív
-      if (text.includes('search') || text.includes('find')) return professionalIcons.keresés
-      if (text.includes('phone') || text.includes('call')) return professionalIcons.telefon
-      if (text.includes('menu') || text.includes('hamburger')) return professionalIcons.menü
-      if (text.includes('sun') || text.includes('light')) return professionalIcons.nap
-      if (text.includes('lock') || text.includes('security')) return professionalIcons.lakat
-      if (text.includes('car') || text.includes('vehicle')) return professionalIcons.autó
-      if (text.includes('computer') || text.includes('pc')) return professionalIcons.laptop
-      if (text.includes('button') || text.includes('notification')) return professionalIcons.gomb
-      if (text.includes('arrow') || text.includes('forward')) return professionalIcons.nyíl
-      if (text.includes('add') || text.includes('create')) return professionalIcons.plus
-      if (text.includes('question') || text.includes('help')) return professionalIcons.kérdőjel
+      if (text.includes('ház') || text.includes('home') || text.includes('otthon') || text.includes('épület')) {
+        console.log('✅ Ház ikon kiválasztva')
+        return professionalIcons['ház']
+      }
       
-      // Fallback: szív ikon
-      return professionalIcons.szív
+      if (text.includes('keresés') || text.includes('search') || text.includes('find') || text.includes('nagyító')) {
+        console.log('✅ Keresés ikon kiválasztva')
+        return professionalIcons['keresés']
+      }
+      
+      if (text.includes('menü') || text.includes('menu') || text.includes('hamburger') || text.includes('vonal')) {
+        console.log('✅ Menü ikon kiválasztva')
+        return professionalIcons['menü']
+      }
+      
+      if (text.includes('plus') || text.includes('add') || text.includes('hozzáad') || text.includes('create') || text.includes('+')) {
+        console.log('✅ Plus ikon kiválasztva')
+        return professionalIcons['plus']
+      }
+      
+      if (text.includes('nyíl') || text.includes('arrow') || text.includes('forward') || text.includes('irány')) {
+        console.log('✅ Nyíl ikon kiválasztva')
+        return professionalIcons['nyíl']
+      }
+      
+      if (text.includes('nap') || text.includes('sun') || text.includes('light') || text.includes('sugár') || text.includes('világít')) {
+        console.log('✅ Nap ikon kiválasztva')
+        return professionalIcons['nap']
+      }
+      
+      if (text.includes('lakat') || text.includes('lock') || text.includes('security') || text.includes('biztonság')) {
+        console.log('✅ Lakat ikon kiválasztva')
+        return professionalIcons['lakat']
+      }
+      
+      if (text.includes('gomb') || text.includes('button') || text.includes('notification') || text.includes('értesítés')) {
+        console.log('✅ Gomb ikon kiválasztva')
+        return professionalIcons['gomb']
+      }
+      
+      if (text.includes('laptop') || text.includes('computer') || text.includes('számítógép') || text.includes('pc')) {
+        console.log('✅ Laptop ikon kiválasztva')
+        return professionalIcons['laptop']
+      }
+      
+      if (text.includes('autó') || text.includes('car') || text.includes('vehicle') || text.includes('jármű') || text.includes('kocsi')) {
+        console.log('✅ Autó ikon kiválasztva')
+        return professionalIcons['autó']
+      }
+      
+      if (text.includes('kérdőjel') || text.includes('question') || text.includes('help') || text.includes('segítség') || text.includes('?')) {
+        console.log('✅ Kérdőjel ikon kiválasztva')
+        return professionalIcons['kérdőjel']
+      }
+      
+      if (text.includes('szív') || text.includes('heart') || text.includes('love') || text.includes('szerelem')) {
+        console.log('✅ Szív ikon kiválasztva')
+        return professionalIcons['szív']
+      }
+      
+      // Ha semmi nem található, véletlenszerűen választunk egyet (nem mindig szív!)
+      const iconKeys = Object.keys(professionalIcons)
+      const randomIcon = iconKeys[Math.floor(Math.random() * iconKeys.length)]
+      console.log('⚠️ Fallback ikon:', randomIcon)
+      return professionalIcons[randomIcon]
     }
 
     const selectedIcon = selectIcon(promptLower)
