@@ -7,11 +7,8 @@ import {
   SkipBack, 
   SkipForward, 
   Plus, 
-  Trash2, 
-  Copy,
+  Trash2,
   Download,
-  Upload,
-  Layers,
   Eye,
   EyeOff
 } from 'lucide-react'
@@ -97,7 +94,7 @@ const TimelineEditor = () => {
   const [selectedLayer, setSelectedLayer] = useState<string>('1')
   const [selectedKeyframe, setSelectedKeyframe] = useState<string | null>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
-  const timelineRef = useRef<HTMLDivElement>(null)
+
 
   const addKeyframe = (layerId: string, time: number) => {
     const layer = layers.find(l => l.id === layerId)
@@ -124,13 +121,7 @@ const TimelineEditor = () => {
     ))
   }
 
-  const removeKeyframe = (layerId: string, keyframeId: string) => {
-    setLayers(prev => prev.map(l => 
-      l.id === layerId 
-        ? { ...l, keyframes: l.keyframes.filter(k => k.id !== keyframeId) }
-        : l
-    ))
-  }
+
 
   const addLayer = () => {
     const newLayer: Layer = {
@@ -188,7 +179,7 @@ const TimelineEditor = () => {
 
   // Animáció lejátszás
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    let interval: number
     if (timeline.isPlaying) {
       interval = setInterval(() => {
         setTimeline(prev => {

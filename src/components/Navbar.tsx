@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Home, Upload, Bot, Timeline } from 'lucide-react'
+import { Home, Upload, Bot, Clock } from 'lucide-react'
 
 const Navbar = () => {
   const location = useLocation()
@@ -9,7 +9,7 @@ const Navbar = () => {
     { path: '/', label: 'Főoldal', icon: Home },
     { path: '/upload', label: 'SVG Feltöltés', icon: Upload },
     { path: '/ai-animation', label: 'AI Animáció', icon: Bot },
-    { path: '/timeline', label: 'Timeline Editor', icon: Timeline },
+    { path: '/timeline', label: 'Timeline Editor', icon: Clock },
   ]
 
   return (

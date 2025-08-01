@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Bot, Send, Download, Sparkles, RefreshCw, Copy, Eye } from 'lucide-react'
+import { Bot, Send, Download, Sparkles, RefreshCw, Copy } from 'lucide-react'
 
 interface GeneratedAnimation {
   id: string

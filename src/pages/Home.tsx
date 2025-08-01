@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Upload, Bot, Timeline, Play, Sparkles, Layers } from 'lucide-react'
+import { Upload, Bot, Clock, Play, Sparkles, Layers } from 'lucide-react'
 
 const Home = () => {
   const features = [
@@ -19,7 +19,7 @@ const Home = () => {
       color: 'bg-purple-500'
     },
     {
-      icon: Timeline,
+      icon: Clock,
       title: 'Timeline Editor',
       description: 'Készíts összetett animációkat frame-by-frame timeline szerkesztővel',
       link: '/timeline',
