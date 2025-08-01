@@ -17,14 +17,14 @@ const AIAnimation = () => {
   const [selectedAnimation, setSelectedAnimation] = useState<GeneratedAnimation | null>(null)
 
   const promptSuggestions = [
-    "Egy lakat ami kirajzolódik és bezáródik",
-    "Ház építése vonalanként felépülve",
-    "Szív ikon ami lüktet és kirajzolódik", 
-    "Villám csapás animáció vonalas stílusban",
-    "Nap ikon sugarakkal kirajzolódva",
-    "Autó ikon ami mozog és kirajzolódik",
-    "Fa növekedése ágról ágra",
-    "Laptop képernyő megnyitása vonalas animációval"
+    "Telefon ikon ami kirajzolódik",
+    "Menü vonalak egymás után megjelennek", 
+    "Szív ami kirajzolódik és pulzál",
+    "Nap sugarakkal ami ragyog",
+    "Kör és négyzet kombinált ikon",
+    "Háromszög ami forog és kirajzolódik",
+    "Egyszerű vonalas gomb ikon",
+    "Kérdőjel szimbólum animációval"
   ]
 
   const animationStyles = [
@@ -81,419 +81,369 @@ const AIAnimation = () => {
       stroke-linejoin="round"
     `
     
-    // Prompt alapú vonalas ikon animációk
-    if (promptLower.includes('lakat') || promptLower.includes('lock')) {
-      return `
-        <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-          <!-- Lakat test -->
-          <rect x="120" y="160" width="60" height="50" rx="8" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="200" stroke-dashoffset="200">
-            <animate attributeName="stroke-dashoffset" 
-                     values="200;0" dur="${getDuration('2s')}" 
-                     begin="1s" fill="freeze"/>
-          </rect>
-          
-          <!-- Lakat íve -->
-          <path d="M 130 160 L 130 140 Q 130 120 150 120 Q 170 120 170 140 L 170 160" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="100" stroke-dashoffset="100">
-            <animate attributeName="stroke-dashoffset" 
-                     values="100;0" dur="${getDuration('1.5s')}" 
-                     begin="0s" fill="freeze"/>
-          </path>
-          
-          <!-- Kulcslyuk -->
-          <circle cx="150" cy="180" r="6" 
-                  stroke="${primaryColor}" stroke-width="2" fill="none"
-                  opacity="0">
-            <animate attributeName="opacity" 
-                     values="0;1" dur="0.3s" 
-                     begin="3s" fill="freeze"/>
-          </circle>
-          <line x1="150" y1="186" x2="150" y2="195" 
-                stroke="${primaryColor}" stroke-width="2"
-                stroke-dasharray="10" stroke-dashoffset="10">
-            <animate attributeName="stroke-dashoffset" 
-                     values="10;0" dur="0.5s" 
-                     begin="3.2s" fill="freeze"/>
-          </line>
-          
-          <!-- Záró animáció -->
-          <path d="M 130 150 Q 150 130 170 150" 
-                stroke="${primaryColor}" stroke-width="3"
-                stroke-dasharray="50" stroke-dashoffset="50" opacity="0">
-            <animate attributeName="stroke-dashoffset" 
-                     values="50;0" dur="${getDuration('0.8s')}" 
-                     begin="4s" fill="freeze"/>
-            <animate attributeName="opacity" 
-                     values="0;1;0" dur="${getDuration('1s')}" 
-                     begin="4s"/>
-          </path>
-        </svg>
-      `
+    // Intelligens ikon elemző és generáló rendszer
+    const analyzePrompt = (text: string) => {
+      const elements = {
+        shapes: [],
+        objects: [],
+        actions: [],
+        modifiers: []
+      }
+      
+      // Alapvető formák felismerése
+      if (text.includes('kör') || text.includes('circle')) elements.shapes.push('circle')
+      if (text.includes('négyzet') || text.includes('square') || text.includes('doboz')) elements.shapes.push('rect')
+      if (text.includes('háromszög') || text.includes('triangle')) elements.shapes.push('triangle')
+      if (text.includes('vonal') || text.includes('line')) elements.shapes.push('line')
+      if (text.includes('íves') || text.includes('curve')) elements.shapes.push('curve')
+      
+      // Objektumok
+      const objectKeywords = {
+        'tech': ['telefon', 'laptop', 'számítógép', 'tablet', 'wifi', 'bluetooth', 'usb'],
+        'ui': ['menü', 'gomb', 'ikon', 'beállítás', 'profil', 'keresés', 'küldés'],
+        'nature': ['fa', 'virág', 'nap', 'hold', 'csillag', 'felhő', 'víz'],
+        'transport': ['autó', 'repülő', 'hajó', 'kerékpár', 'vonat'],
+        'home': ['ház', 'ajtó', 'ablak', 'bútor', 'lámpa'],
+        'symbols': ['szív', 'plus', 'mínusz', 'nyíl', 'kérdőjel', 'felkiáltójel']
+      }
+      
+      for (const [category, keywords] of Object.entries(objectKeywords)) {
+        for (const keyword of keywords) {
+          if (text.includes(keyword)) {
+            elements.objects.push({ type: keyword, category })
+            break
+          }
+        }
+      }
+      
+      // Akciók
+      if (text.includes('mozog') || text.includes('mozgás')) elements.actions.push('move')
+      if (text.includes('forog') || text.includes('forgás')) elements.actions.push('rotate')
+      if (text.includes('pulzál') || text.includes('lüktet')) elements.actions.push('pulse')
+      if (text.includes('ragyog') || text.includes('világít')) elements.actions.push('glow')
+      if (text.includes('kirajzolódik') || text.includes('megjelenik')) elements.actions.push('draw')
+      
+      return elements
     }
     
-    if (promptLower.includes('ház') || promptLower.includes('house') || promptLower.includes('épület')) {
-      return `
-        <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-          <!-- Alap -->
-          <line x1="100" y1="220" x2="200" y2="220" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="100" stroke-dashoffset="100">
-            <animate attributeName="stroke-dashoffset" 
-                     values="100;0" dur="${getDuration('1s')}" 
-                     begin="0s" fill="freeze"/>
-          </line>
-          
-          <!-- Oldalfalak -->
-          <line x1="100" y1="220" x2="100" y2="160" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="60" stroke-dashoffset="60">
-            <animate attributeName="stroke-dashoffset" 
-                     values="60;0" dur="${getDuration('0.8s')}" 
-                     begin="1s" fill="freeze"/>
-          </line>
-          <line x1="200" y1="220" x2="200" y2="160" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="60" stroke-dashoffset="60">
-            <animate attributeName="stroke-dashoffset" 
-                     values="60;0" dur="${getDuration('0.8s')}" 
-                     begin="1.2s" fill="freeze"/>
-          </line>
-          
-          <!-- Tetőgerinc -->
-          <line x1="100" y1="160" x2="200" y2="160" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="100" stroke-dashoffset="100">
-            <animate attributeName="stroke-dashoffset" 
-                     values="100;0" dur="${getDuration('0.8s')}" 
-                     begin="1.8s" fill="freeze"/>
-          </line>
-          
-          <!-- Tető -->
-          <path d="M 100 160 L 150 120 L 200 160" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="120" stroke-dashoffset="120">
-            <animate attributeName="stroke-dashoffset" 
-                     values="120;0" dur="${getDuration('1.2s')}" 
-                     begin="2.5s" fill="freeze"/>
-          </path>
-          
-          <!-- Ajtó -->
-          <rect x="130" y="190" width="20" height="30" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="100" stroke-dashoffset="100">
-            <animate attributeName="stroke-dashoffset" 
-                     values="100;0" dur="${getDuration('0.8s')}" 
-                     begin="3.5s" fill="freeze"/>
-          </rect>
-          
-          <!-- Ablak -->
-          <rect x="165" y="175" width="20" height="20" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="80" stroke-dashoffset="80">
-            <animate attributeName="stroke-dashoffset" 
-                     values="80;0" dur="${getDuration('0.6s')}" 
-                     begin="4s" fill="freeze"/>
-          </rect>
-          
-          <!-- Ablakkereszt -->
-          <line x1="175" y1="175" x2="175" y2="195" 
-                stroke="${primaryColor}" stroke-width="1.5"
-                stroke-dasharray="20" stroke-dashoffset="20">
-            <animate attributeName="stroke-dashoffset" 
-                     values="20;0" dur="${getDuration('0.3s')}" 
-                     begin="4.5s" fill="freeze"/>
-          </line>
-          <line x1="165" y1="185" x2="185" y2="185" 
-                stroke="${primaryColor}" stroke-width="1.5"
-                stroke-dasharray="20" stroke-dashoffset="20">
-            <animate attributeName="stroke-dashoffset" 
-                     values="20;0" dur="${getDuration('0.3s')}" 
-                     begin="4.7s" fill="freeze"/>
-          </line>
-        </svg>
-      `
+    // Dinamikus SVG generátor
+    const generateDynamicIcon = (analysis: any) => {
+      let svgElements = []
+      let animationDelay = 0
+      
+      // Ha nincs konkrét objektum, alapvető formákból építkezünk
+      if (analysis.objects.length === 0) {
+        // Véletlenszerű egyszerű ikon generálás a prompt hangulata alapján
+        const centerX = 150, centerY = 150
+        
+        if (analysis.shapes.includes('circle')) {
+          svgElements.push(`
+            <circle cx="${centerX}" cy="${centerY}" r="40" 
+                    stroke="${primaryColor}" ${commonStyles}
+                    stroke-dasharray="250" stroke-dashoffset="250">
+              <animate attributeName="stroke-dashoffset" 
+                       values="250;0" dur="${getDuration('2s')}" 
+                       begin="${animationDelay}s" fill="freeze"/>
+            </circle>
+          `)
+          animationDelay += 1.5
+        }
+        
+        if (analysis.shapes.includes('rect')) {
+          svgElements.push(`
+            <rect x="${centerX-30}" y="${centerY-30}" width="60" height="60" 
+                  stroke="${primaryColor}" ${commonStyles}
+                  stroke-dasharray="240" stroke-dashoffset="240">
+              <animate attributeName="stroke-dashoffset" 
+                       values="240;0" dur="${getDuration('2s')}" 
+                       begin="${animationDelay}s" fill="freeze"/>
+            </rect>
+          `)
+          animationDelay += 1.5
+        }
+        
+        if (analysis.shapes.includes('triangle')) {
+          svgElements.push(`
+            <polygon points="${centerX},${centerY-30} ${centerX-30},${centerY+20} ${centerX+30},${centerY+20}" 
+                     stroke="${primaryColor}" ${commonStyles}
+                     stroke-dasharray="180" stroke-dashoffset="180">
+              <animate attributeName="stroke-dashoffset" 
+                       values="180;0" dur="${getDuration('1.8s')}" 
+                       begin="${animationDelay}s" fill="freeze"/>
+            </polygon>
+          `)
+          animationDelay += 1.5
+        }
+        
+        // Ha nincs specifikus forma, generálunk egy általános ikont
+        if (analysis.shapes.length === 0) {
+          svgElements.push(`
+            <circle cx="${centerX}" cy="${centerY}" r="35" 
+                    stroke="${primaryColor}" ${commonStyles}
+                    stroke-dasharray="220" stroke-dashoffset="220">
+              <animate attributeName="stroke-dashoffset" 
+                       values="220;0" dur="${getDuration('2s')}" 
+                       begin="0s" fill="freeze"/>
+            </circle>
+            <circle cx="${centerX}" cy="${centerY}" r="15" 
+                    stroke="${primaryColor}" stroke-width="1.5" fill="none"
+                    stroke-dasharray="95" stroke-dashoffset="95">
+              <animate attributeName="stroke-dashoffset" 
+                       values="95;0" dur="${getDuration('1s')}" 
+                       begin="1.5s" fill="freeze"/>
+            </circle>
+          `)
+        }
+      } else {
+        // Specifikus objektumok alapján generálás
+        const obj = analysis.objects[0]
+        svgElements.push(generateObjectIcon(obj.type, primaryColor, getDuration, commonStyles))
+      }
+      
+      // Animációk hozzáadása
+      if (analysis.actions.includes('rotate')) {
+        svgElements.push(`
+          <animateTransform attributeName="transform" type="rotate" 
+                            values="0 150 150;360 150 150" dur="${getDuration('3s')}" 
+                            begin="${animationDelay + 1}s" repeatCount="indefinite"/>
+        `)
+      }
+      
+      if (analysis.actions.includes('pulse')) {
+        svgElements.push(`
+          <animateTransform attributeName="transform" type="scale" 
+                            values="1;1.2;1" dur="${getDuration('1.5s')}" 
+                            begin="${animationDelay + 1}s" repeatCount="indefinite"/>
+        `)
+      }
+      
+      return svgElements.join('')
     }
     
-    if (promptLower.includes('szív') || promptLower.includes('heart') || promptLower.includes('lüktet')) {
-      return `
-        <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-          <!-- Szív -->
-          <path d="M 150 200 C 120 180, 90 150, 90 120 C 90 100, 110 80, 130 80 C 140 80, 150 90, 150 100 C 150 90, 160 80, 170 80 C 190 80, 210 100, 210 120 C 210 150, 180 180, 150 200 Z" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="300" stroke-dashoffset="300">
-            <animate attributeName="stroke-dashoffset" 
-                     values="300;0" dur="${getDuration('3s')}" 
-                     begin="0s" fill="freeze"/>
-            <animateTransform attributeName="transform" type="scale" 
-                              values="1;1.1;1" dur="${getDuration('1s')}" 
-                              begin="3.5s" repeatCount="indefinite"/>
-          </path>
-          
-          <!-- Lüktetés effekt -->
-          <circle cx="150" cy="140" r="40" 
-                  stroke="${primaryColor}" stroke-width="1" fill="none" opacity="0">
-            <animate attributeName="r" values="30;60;30" dur="${getDuration('1s')}" 
-                     begin="4s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.8;0;0.8" dur="${getDuration('1s')}" 
-                     begin="4s" repeatCount="indefinite"/>
-          </circle>
-          
-          <!-- Szívcsapás vonal -->
-          <path d="M 80 250 L 110 250 L 120 230 L 140 270 L 160 210 L 180 250 L 220 250" 
-                stroke="${primaryColor}" stroke-width="2.5" fill="none"
-                stroke-dasharray="180" stroke-dashoffset="180">
-            <animate attributeName="stroke-dashoffset" 
-                     values="180;0" dur="${getDuration('2s')}" 
-                     begin="5s" fill="freeze"/>
-          </path>
-        </svg>
-      `
-    }
-    
-    if (promptLower.includes('villám') || promptLower.includes('lightning') || promptLower.includes('csapás')) {
-      return `
-        <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-          <!-- Villám -->
-          <path d="M 150 60 L 140 120 L 160 120 L 120 180 L 140 180 L 110 240" 
-                stroke="#EAB308" stroke-width="4" fill="none"
-                stroke-linecap="round" stroke-linejoin="round"
-                stroke-dasharray="200" stroke-dashoffset="200">
-            <animate attributeName="stroke-dashoffset" 
-                     values="200;0" dur="${getDuration('1.5s')}" 
-                     begin="0s" fill="freeze"/>
-            <animate attributeName="stroke-width" 
-                     values="4;8;4" dur="0.2s" 
-                     begin="1.5s"/>
-            <animate attributeName="opacity" 
-                     values="1;0.3;1" dur="0.1s" 
-                     begin="1.7s" repeatCount="3"/>
-          </path>
-          
-          <!-- Villám ragyogás -->
-          <circle cx="150" cy="150" r="0" 
-                  stroke="#FEF3C7" stroke-width="20" fill="none" opacity="0">
-            <animate attributeName="r" values="0;80;0" dur="0.8s" 
-                     begin="1.5s"/>
-            <animate attributeName="opacity" values="0;0.6;0" dur="0.8s" 
-                     begin="1.5s"/>
-          </circle>
-          
-          <!-- Kisebb villámok -->
-          <path d="M 180 100 L 170 140 L 190 160" 
-                stroke="#EAB308" stroke-width="2" fill="none"
-                stroke-dasharray="80" stroke-dashoffset="80">
-            <animate attributeName="stroke-dashoffset" 
-                     values="80;0" dur="${getDuration('0.8s')}" 
-                     begin="2s" fill="freeze"/>
-          </path>
-          <path d="M 120 90 L 110 130 L 130 145" 
-                stroke="#EAB308" stroke-width="2" fill="none"
-                stroke-dasharray="70" stroke-dashoffset="70">
-            <animate attributeName="stroke-dashoffset" 
-                     values="70;0" dur="${getDuration('0.7s')}" 
-                     begin="2.2s" fill="freeze"/>
-          </path>
-        </svg>
-      `
-    }
-    
-    if (promptLower.includes('nap') || promptLower.includes('sun') || promptLower.includes('sugár')) {
-      return `
-        <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-          <!-- Nap körvonala -->
-          <circle cx="150" cy="150" r="35" 
-                  stroke="#EAB308" ${commonStyles}
-                  stroke-dasharray="220" stroke-dashoffset="220">
+    // Egyszerű objektum ikon generátor
+    const generateObjectIcon = (type: string, color: string, getDuration: any, styles: string) => {
+      const simpleIcons = {
+        'telefon': `
+          <rect x="130" y="100" width="40" height="70" rx="8" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="220" stroke-dashoffset="220">
             <animate attributeName="stroke-dashoffset" 
                      values="220;0" dur="${getDuration('2s')}" 
                      begin="0s" fill="freeze"/>
+          </rect>
+          <circle cx="150" cy="120" r="3" fill="${color}" opacity="0">
+            <animate attributeName="opacity" values="0;1" dur="0.3s" 
+                     begin="2s" fill="freeze"/>
           </circle>
-          
-          <!-- Nap sugarak -->
+          <rect x="135" y="155" width="30" height="8" rx="4" 
+                stroke="${color}" stroke-width="1.5" fill="none"
+                stroke-dasharray="76" stroke-dashoffset="76">
+            <animate attributeName="stroke-dashoffset" 
+                     values="76;0" dur="${getDuration('1s')}" 
+                     begin="2.2s" fill="freeze"/>
+          </rect>
+        `,
+        'menü': `
+          <line x1="120" y1="130" x2="180" y2="130" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="60" stroke-dashoffset="60">
+            <animate attributeName="stroke-dashoffset" 
+                     values="60;0" dur="${getDuration('1s')}" 
+                     begin="0s" fill="freeze"/>
+          </line>
+          <line x1="120" y1="150" x2="180" y2="150" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="60" stroke-dashoffset="60">
+            <animate attributeName="stroke-dashoffset" 
+                     values="60;0" dur="${getDuration('1s')}" 
+                     begin="0.5s" fill="freeze"/>
+          </line>
+          <line x1="120" y1="170" x2="180" y2="170" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="60" stroke-dashoffset="60">
+            <animate attributeName="stroke-dashoffset" 
+                     values="60;0" dur="${getDuration('1s')}" 
+                     begin="1s" fill="freeze"/>
+          </line>
+        `,
+        'szív': `
+          <path d="M 150 170 C 130 155, 110 135, 110 115 C 110 100, 125 85, 140 85 C 145 85, 150 90, 150 95 C 150 90, 155 85, 160 85 C 175 85, 190 100, 190 115 C 190 135, 170 155, 150 170 Z" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="200" stroke-dashoffset="200">
+            <animate attributeName="stroke-dashoffset" 
+                     values="200;0" dur="${getDuration('2.5s')}" 
+                     begin="0s" fill="freeze"/>
+          </path>
+        `,
+        'nap': `
+          <circle cx="150" cy="150" r="25" 
+                  stroke="${color}" ${styles}
+                  stroke-dasharray="157" stroke-dashoffset="157">
+            <animate attributeName="stroke-dashoffset" 
+                     values="157;0" dur="${getDuration('1.8s')}" 
+                     begin="0s" fill="freeze"/>
+          </circle>
           ${Array.from({length: 8}, (_, i) => {
             const angle = i * 45
-            const x1 = 150 + Math.cos(angle * Math.PI / 180) * 50
-            const y1 = 150 + Math.sin(angle * Math.PI / 180) * 50
-            const x2 = 150 + Math.cos(angle * Math.PI / 180) * 70
-            const y2 = 150 + Math.sin(angle * Math.PI / 180) * 70
+            const x1 = 150 + Math.cos(angle * Math.PI / 180) * 35
+            const y1 = 150 + Math.sin(angle * Math.PI / 180) * 35
+            const x2 = 150 + Math.cos(angle * Math.PI / 180) * 50
+            const y2 = 150 + Math.sin(angle * Math.PI / 180) * 50
             return `
               <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" 
-                    stroke="#EAB308" stroke-width="3" stroke-linecap="round"
-                    stroke-dasharray="25" stroke-dashoffset="25">
+                    stroke="${color}" stroke-width="2.5" stroke-linecap="round"
+                    stroke-dasharray="18" stroke-dashoffset="18">
                 <animate attributeName="stroke-dashoffset" 
-                         values="25;0" dur="${getDuration('0.5s')}" 
-                         begin="${2 + i * 0.1}s" fill="freeze"/>
+                         values="18;0" dur="${getDuration('0.4s')}" 
+                         begin="${1.5 + i * 0.1}s" fill="freeze"/>
               </line>
             `
           }).join('')}
-          
-          <!-- Ragyogás animáció -->
-          <circle cx="150" cy="150" r="35" 
-                  stroke="#FEF3C7" stroke-width="2" fill="none" opacity="0">
-            <animate attributeName="r" values="35;50;35" dur="${getDuration('2s')}" 
-                     begin="3s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0;0.8;0" dur="${getDuration('2s')}" 
-                     begin="3s" repeatCount="indefinite"/>
-          </circle>
-          
-          <!-- Nap arca -->
-          <circle cx="140" cy="140" r="3" fill="#EAB308" opacity="0">
-            <animate attributeName="opacity" values="0;1" dur="0.3s" 
-                     begin="4s" fill="freeze"/>
-          </circle>
-          <circle cx="160" cy="140" r="3" fill="#EAB308" opacity="0">
-            <animate attributeName="opacity" values="0;1" dur="0.3s" 
-                     begin="4.2s" fill="freeze"/>
-          </circle>
-          <path d="M 135 160 Q 150 170 165 160" 
-                stroke="#EAB308" stroke-width="2" fill="none"
-                stroke-dasharray="35" stroke-dashoffset="35">
+        `,
+        'gomb': `
+          <rect x="120" y="130" width="60" height="40" rx="20" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="200" stroke-dashoffset="200">
             <animate attributeName="stroke-dashoffset" 
-                     values="35;0" dur="0.5s" 
-                     begin="4.5s" fill="freeze"/>
-          </path>
-        </svg>
-      `
-    }
-    
-    if (promptLower.includes('autó') || promptLower.includes('car') || promptLower.includes('jármű')) {
-      return `
-        <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-          <!-- Autó vázolása -->
-          <!-- Alváz -->
-          <line x1="80" y1="180" x2="220" y2="180" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="140" stroke-dashoffset="140">
+                     values="200;0" dur="${getDuration('2s')}" 
+                     begin="0s" fill="freeze"/>
+          </rect>
+          <circle cx="150" cy="150" r="5" fill="${color}" opacity="0">
+            <animate attributeName="opacity" values="0;1" dur="0.3s" 
+                     begin="2s" fill="freeze"/>
+          </circle>
+        `,
+        'keresés': `
+          <circle cx="140" cy="140" r="20" 
+                  stroke="${color}" ${styles}
+                  stroke-dasharray="125" stroke-dashoffset="125">
             <animate attributeName="stroke-dashoffset" 
-                     values="140;0" dur="${getDuration('1.5s')}" 
+                     values="125;0" dur="${getDuration('1.5s')}" 
+                     begin="0s" fill="freeze"/>
+          </circle>
+          <line x1="155" y1="155" x2="170" y2="170" 
+                stroke="${color}" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="21" stroke-dashoffset="21">
+            <animate attributeName="stroke-dashoffset" 
+                     values="21;0" dur="${getDuration('0.8s')}" 
+                     begin="1.5s" fill="freeze"/>
+          </line>
+        `,
+        'plus': `
+          <line x1="150" y1="120" x2="150" y2="180" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="60" stroke-dashoffset="60">
+            <animate attributeName="stroke-dashoffset" 
+                     values="60;0" dur="${getDuration('1s')}" 
                      begin="0s" fill="freeze"/>
           </line>
-          
-          <!-- Autó test -->
-          <path d="M 80 180 L 80 160 L 100 140 L 200 140 L 220 160 L 220 180" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="240" stroke-dashoffset="240">
+          <line x1="120" y1="150" x2="180" y2="150" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="60" stroke-dashoffset="60">
             <animate attributeName="stroke-dashoffset" 
-                     values="240;0" dur="${getDuration('2s')}" 
-                     begin="1s" fill="freeze"/>
-          </path>
-          
-          <!-- Kerekek -->
-          <circle cx="110" cy="180" r="15" 
-                  stroke="${primaryColor}" ${commonStyles}
-                  stroke-dasharray="95" stroke-dashoffset="95">
-            <animate attributeName="stroke-dashoffset" 
-                     values="95;0" dur="${getDuration('1s')}" 
-                     begin="2.5s" fill="freeze"/>
-            <animateTransform attributeName="transform" type="rotate" 
-                              values="0 110 180;360 110 180" dur="${getDuration('2s')}" 
-                              begin="4s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="190" cy="180" r="15" 
-                  stroke="${primaryColor}" ${commonStyles}
-                  stroke-dasharray="95" stroke-dashoffset="95">
-            <animate attributeName="stroke-dashoffset" 
-                     values="95;0" dur="${getDuration('1s')}" 
-                     begin="3s" fill="freeze"/>
-            <animateTransform attributeName="transform" type="rotate" 
-                              values="0 190 180;360 190 180" dur="${getDuration('2s')}" 
-                              begin="4s" repeatCount="indefinite"/>
-          </circle>
-          
-          <!-- Ablakok -->
-          <path d="M 100 160 L 110 145 L 190 145 L 200 160" 
-                stroke="${primaryColor}" stroke-width="2" fill="none"
-                stroke-dasharray="120" stroke-dashoffset="120">
-            <animate attributeName="stroke-dashoffset" 
-                     values="120;0" dur="${getDuration('1.2s')}" 
-                     begin="3.5s" fill="freeze"/>
-          </path>
-          
-          <!-- Ajtó vonal -->
-          <line x1="150" y1="160" x2="150" y2="145" 
-                stroke="${primaryColor}" stroke-width="2"
-                stroke-dasharray="15" stroke-dashoffset="15">
-            <animate attributeName="stroke-dashoffset" 
-                     values="15;0" dur="${getDuration('0.3s')}" 
-                     begin="4.5s" fill="freeze"/>
+                     values="60;0" dur="${getDuration('1s')}" 
+                     begin="0.5s" fill="freeze"/>
           </line>
-          
-          <!-- Mozgás -->
-          <animateTransform attributeName="transform" type="translate" 
-                            values="0 0;30 0;0 0" dur="${getDuration('3s')}" 
-                            begin="5s" repeatCount="indefinite"/>
-        </svg>
-      `
+        `,
+        'nyíl': `
+          <line x1="120" y1="150" x2="170" y2="150" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="50" stroke-dashoffset="50">
+            <animate attributeName="stroke-dashoffset" 
+                     values="50;0" dur="${getDuration('1.2s')}" 
+                     begin="0s" fill="freeze"/>
+          </line>
+          <line x1="170" y1="150" x2="160" y2="140" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="14" stroke-dashoffset="14">
+            <animate attributeName="stroke-dashoffset" 
+                     values="14;0" dur="${getDuration('0.5s')}" 
+                     begin="1.2s" fill="freeze"/>
+          </line>
+          <line x1="170" y1="150" x2="160" y2="160" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="14" stroke-dashoffset="14">
+            <animate attributeName="stroke-dashoffset" 
+                     values="14;0" dur="${getDuration('0.5s')}" 
+                     begin="1.4s" fill="freeze"/>
+          </line>
+        `,
+        'kérdőjel': `
+          <path d="M 135 120 Q 135 105 150 105 Q 165 105 165 120 Q 165 135 150 135" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="70" stroke-dashoffset="70">
+            <animate attributeName="stroke-dashoffset" 
+                     values="70;0" dur="${getDuration('2s')}" 
+                     begin="0s" fill="freeze"/>
+          </path>
+          <circle cx="150" cy="155" r="3" fill="${color}" opacity="0">
+            <animate attributeName="opacity" values="0;1" dur="0.3s" 
+                     begin="2s" fill="freeze"/>
+          </circle>
+        `,
+        'ház': `
+          <line x1="110" y1="180" x2="190" y2="180" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="80" stroke-dashoffset="80">
+            <animate attributeName="stroke-dashoffset" 
+                     values="80;0" dur="${getDuration('1s')}" 
+                     begin="0s" fill="freeze"/>
+          </line>
+          <line x1="110" y1="180" x2="110" y2="140" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="40" stroke-dashoffset="40">
+            <animate attributeName="stroke-dashoffset" 
+                     values="40;0" dur="${getDuration('0.8s')}" 
+                     begin="1s" fill="freeze"/>
+          </line>
+          <line x1="190" y1="180" x2="190" y2="140" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="40" stroke-dashoffset="40">
+            <animate attributeName="stroke-dashoffset" 
+                     values="40;0" dur="${getDuration('0.8s')}" 
+                     begin="1.2s" fill="freeze"/>
+          </line>
+          <path d="M 110 140 L 150 110 L 190 140" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="80" stroke-dashoffset="80">
+            <animate attributeName="stroke-dashoffset" 
+                     values="80;0" dur="${getDuration('1.2s')}" 
+                     begin="2s" fill="freeze"/>
+          </path>
+          <rect x="140" y="155" width="20" height="25" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="90" stroke-dashoffset="90">
+            <animate attributeName="stroke-dashoffset" 
+                     values="90;0" dur="${getDuration('1s')}" 
+                     begin="3s" fill="freeze"/>
+          </rect>
+        `
+      }
+      
+      return simpleIcons[type] || `
+        <circle cx="150" cy="150" r="30" 
+                stroke="${color}" ${styles}
+                stroke-dasharray="188" stroke-dashoffset="188">
+          <animate attributeName="stroke-dashoffset" 
+                   values="188;0" dur="${getDuration('2s')}" 
+                   begin="0s" fill="freeze"/>
+        </circle>
+        <circle cx="150" cy="150" r="8" fill="${color}" opacity="0">
+          <animate attributeName="opacity" values="0;1" dur="0.3s" 
+                   begin="2s" fill="freeze"/>
+        </circle>
+      ` // Fallback: általános ikon
     }
     
-    // Default: laptop megnyitása
+    // Főlogika
+    const analysis = analyzePrompt(promptLower)
+    const iconSVG = generateDynamicIcon(analysis)
+    
     return `
       <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-        <!-- Laptop alap -->
-        <rect x="100" y="180" width="100" height="40" rx="5" 
-              stroke="${primaryColor}" ${commonStyles}
-              stroke-dasharray="280" stroke-dashoffset="280">
-          <animate attributeName="stroke-dashoffset" 
-                   values="280;0" dur="${getDuration('2s')}" 
-                   begin="0s" fill="freeze"/>
-        </rect>
-        
-        <!-- Trackpad -->
-        <rect x="130" y="190" width="40" height="20" rx="3" 
-              stroke="${primaryColor}" stroke-width="1.5" fill="none"
-              stroke-dasharray="120" stroke-dashoffset="120">
-          <animate attributeName="stroke-dashoffset" 
-                   values="120;0" dur="${getDuration('1s')}" 
-                   begin="2s" fill="freeze"/>
-        </rect>
-        
-        <!-- Képernyő (zárt állapot) -->
-        <rect x="105" y="175" width="90" height="5" rx="2" 
-              stroke="${primaryColor}" stroke-width="2" fill="none"
-              stroke-dasharray="190" stroke-dashoffset="190">
-          <animate attributeName="stroke-dashoffset" 
-                   values="190;0" dur="${getDuration('1.5s')}" 
-                   begin="1s" fill="freeze"/>
-        </rect>
-        
-        <!-- Képernyő nyitás -->
-        <g transform-origin="150 175">
-          <rect x="105" y="100" width="90" height="75" rx="5" 
-                stroke="${primaryColor}" ${commonStyles}
-                stroke-dasharray="330" stroke-dashoffset="330" opacity="0">
-            <animate attributeName="stroke-dashoffset" 
-                     values="330;0" dur="${getDuration('2.5s')}" 
-                     begin="3.5s" fill="freeze"/>
-            <animate attributeName="opacity" 
-                     values="0;1" dur="0.1s" 
-                     begin="3.5s" fill="freeze"/>
-          </rect>
-          
-          <!-- Képernyő tartalom -->
-          <rect x="115" y="110" width="70" height="50" 
-                stroke="${primaryColor}" stroke-width="1.5" fill="none" opacity="0">
-            <animate attributeName="opacity" 
-                     values="0;1" dur="0.3s" 
-                     begin="5.5s" fill="freeze"/>
-          </rect>
-          
-          <animateTransform attributeName="transform" type="rotate" 
-                            values="0;-85" dur="${getDuration('2s')}" 
-                            begin="3s" fill="freeze"/>
-        </g>
-        
-        <!-- Bekapcsolás pont -->
-        <circle cx="150" cy="120" r="2" fill="${primaryColor}" opacity="0">
-          <animate attributeName="opacity" 
-                   values="0;1;0;1" dur="0.5s" 
-                   begin="6s" repeatCount="2"/>
-        </circle>
-        
-        <text x="150" y="260" text-anchor="middle" fill="#666" font-size="10">
-          "${prompt.substring(0, 35)}..."
+        ${iconSVG}
+        <text x="150" y="280" text-anchor="middle" fill="#666" font-size="9">
+          "${prompt.substring(0, 40)}..."
         </text>
       </svg>
     `
